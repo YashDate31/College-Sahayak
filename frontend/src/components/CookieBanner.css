@@ -1,0 +1,154 @@
+.cookie-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1rem;
+}
+
+.cookie-modal {
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 550px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.cookie-header {
+  padding: 1.5rem 1.5rem 0.5rem;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.shield-icon {
+  color: #1e3a8a;
+  flex-shrink: 0;
+}
+
+.brand-logo h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.cookie-body {
+  padding: 0 1.5rem 1rem;
+}
+
+.cookie-body p {
+  color: #475569;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.cookie-links {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.cookie-links a {
+  color: #64748b;
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.cookie-links a:hover {
+  text-decoration: underline;
+  color: #334155;
+}
+
+.cookie-footer {
+  border-top: 1px solid #e2e8f0;
+  padding: 1rem 1.5rem;
+  background-color: #f8fafc;
+}
+
+.purposes-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 1rem;
+}
+
+.cookie-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.cookie-buttons button {
+  flex: 1;
+  padding: 0.75rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cookie-buttons .btn-outline {
+  background-color: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+}
+
+.cookie-buttons .btn-outline:hover {
+  background-color: #e2e8f0;
+}
+
+.cookie-buttons .btn-primary {
+  background-color: #0056b3; /* Or your brand color */
+  border: 1px solid #0056b3;
+  color: white;
+}
+
+.cookie-buttons .btn-primary:hover {
+  background-color: #004494;
+}
+
+.cookie-powered {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+/* Animations */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 480px) {
+  .cookie-buttons {
+    flex-direction: column;
+  }
+}

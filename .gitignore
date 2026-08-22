@@ -1,0 +1,40 @@
+# Root level gitignore
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Environment files (NEVER commit these - they contain secrets!)
+.env
+.env.local
+.env.production
+*.local
+
+# Firebase private key
+serviceAccountKey.json
+
+# Build outputs
+dist/
+dist-ssr/
+build/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Large media files and unused assets
+info/
+img/
+resourses 5th sem/
+*.mp4
+*.pptx
+
+# IDE
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Logs
+logs/
+*.log
+

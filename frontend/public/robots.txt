@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://internship-2k26.vercel.app/sitemap.xml
