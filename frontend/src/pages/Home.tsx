@@ -104,10 +104,20 @@ export function Home() {
   return (
     <>
       <Helmet>
-        <title>College Sahayak - Free MSBTE Diploma Study Material and Resources</title>
-        <meta name="description" content="College Sahayak - India's free educational hub for MSBTE polytechnic diploma students in Maharashtra. Download lab manuals, notes, microprojects, assignments, previous year question papers, and K-Scheme curriculum for all branches." />
-        <meta name="keywords" content="College Sahayak, college sahayak msbte, MSBTE study material, polytechnic diploma notes Maharashtra, lab manuals, microprojects, previous year question papers, K-Scheme" />
-        <link rel="canonical" href="https://internship-2k26.vercel.app/" />
+        <title>College Sahayak - Free MSBTE Diploma Study Material &amp; Resources</title>
+        <meta name="description" content="Download free MSBTE polytechnic diploma study materials, lab manuals, assignments, microprojects, and previous year question papers for Maharashtra students." />
+        <meta name="keywords" content="College Sahayak, MSBTE, polytechnic, diploma notes, lab manuals, microprojects, previous year papers, Maharashtra" />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{
+          __html: `
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "name": "College Sahayak",
+              "url": "https://internship-2k26.vercel.app/",
+              "description": "Free MSBTE diploma study resources for Maharashtra polytechnic students."
+            }
+          `
+        }} />
       </Helmet>
       <div className="home-container">
       {/* 1. Hero Section */}
@@ -116,7 +126,7 @@ export function Home() {
         <div className="container hero-content">
           <div className="hero-text animate-fade-in">
             <h1 className="hero-title">
-              <span className="text-gradient">College Sahayak</span> – Your Diploma Studies, Simplified
+              Your Diploma Studies, <span className="text-gradient">Simplified</span>
             </h1>
             <p className="hero-subtitle">
               Get access to the latest syllabus, practicals, assignments, and micro-projects for your branch.
