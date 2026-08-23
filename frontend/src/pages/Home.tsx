@@ -104,28 +104,10 @@ export function Home() {
   return (
     <>
       <Helmet>
-        <title>College Sahayak – Free MSBTE Diploma Study Material &amp; Resources</title>
-        <meta name="description" content="College Sahayak – India's free educational hub for MSBTE polytechnic diploma students in Maharashtra. Download lab manuals, notes, microprojects, assignments, previous year question papers, and K-Scheme curriculum for all branches." />
+        <title>College Sahayak - Free MSBTE Diploma Study Material and Resources</title>
+        <meta name="description" content="College Sahayak - India's free educational hub for MSBTE polytechnic diploma students in Maharashtra. Download lab manuals, notes, microprojects, assignments, previous year question papers, and K-Scheme curriculum for all branches." />
         <meta name="keywords" content="College Sahayak, college sahayak msbte, MSBTE study material, polytechnic diploma notes Maharashtra, lab manuals, microprojects, previous year question papers, K-Scheme" />
         <link rel="canonical" href="https://internship-2k26.vercel.app/" />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{
-          __html: `
-            {
-              "@context": "https://schema.org",
-              "@type": "EducationalOrganization",
-              "name": "College Sahayak",
-              "alternateName": "CollegeSahayak",
-              "url": "https://internship-2k26.vercel.app/",
-              "logo": "https://internship-2k26.vercel.app/logo1.png",
-              "description": "College Sahayak provides free MSBTE diploma study resources including lab manuals, notes, microprojects, and question papers for Maharashtra polytechnic students.",
-              "address": {
-                "@type": "PostalAddress",
-                "addressRegion": "Maharashtra",
-                "addressCountry": "IN"
-              }
-            }
-          `
-        }} />
       </Helmet>
       <div className="home-container">
       {/* 1. Hero Section */}
