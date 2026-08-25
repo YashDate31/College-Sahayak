@@ -266,11 +266,10 @@ export function Home() {
                   {[1, 2, 3, 4, 5, 6].map((semester) => (
                     <button
                       key={semester}
-                      className={`semester-btn flex flex-col items-center justify-center gap-1 ${selectedSemester === semester ? 'selected' : ''}`}
+                      className={`semester-btn ${selectedSemester === semester ? 'selected' : ''}`}
                       onClick={() => setSelectedSemester(semester)}
                     >
-                      <span className="text-sm">Semester</span>
-                      <span className="text-lg font-bold">{semester}</span>
+                      Semester {semester}
                     </button>
                   ))}
                 </div>

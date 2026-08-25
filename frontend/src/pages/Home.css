@@ -444,6 +444,7 @@
   font-weight: 500;
   color: var(--text-primary);
   transition: all 0.2s;
+  white-space: nowrap;
 }
 
 .semester-btn:hover {
