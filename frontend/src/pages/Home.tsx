@@ -12,11 +12,11 @@ import './Home.css';
 
 // --- Data ---
 const branches = [
-  { id: 'CO', name: 'Computer Engineering', icon: 'CE' },
+  { id: 'CO', name: 'Computer Engineering', icon: 'CO' },
   { id: 'ME', name: 'Mechanical Engineering', icon: 'ME' },
   { id: 'EE', name: 'Electrical Engineering', icon: 'EE' },
-  { id: 'CE', name: 'Civil Engineering', icon: 'CV' },
-  { id: 'EJ', name: 'Electronics Engineering', icon: 'EX' },
+  { id: 'CE', name: 'Civil Engineering', icon: 'CE' },
+  { id: 'EJ', name: 'Electronics Engineering', icon: 'E&TC' },
   { id: 'AU', name: 'Automobile Engineering', icon: 'AU' },
 ];
 
