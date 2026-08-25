@@ -10,6 +10,7 @@ import { handleProtectedDownload } from '../utils/auth';
 import { API_URL } from '../utils/api';
 import './Home.css';
 
+// --- Data ---
 const branches = [
   { id: 'CO', name: 'Computer Engineering', icon: 'CE' },
   { id: 'ME', name: 'Mechanical Engineering', icon: 'ME' },
@@ -265,10 +266,11 @@ export function Home() {
                   {[1, 2, 3, 4, 5, 6].map((semester) => (
                     <button
                       key={semester}
-                      className={`semester-btn ${selectedSemester === semester ? 'selected' : ''}`}
+                      className={`semester-btn flex flex-col items-center justify-center gap-1 ${selectedSemester === semester ? 'selected' : ''}`}
                       onClick={() => setSelectedSemester(semester)}
                     >
-                      Semester {semester}
+                      <span className="text-sm">Semester</span>
+                      <span className="text-lg font-bold">{semester}</span>
                     </button>
                   ))}
                 </div>
