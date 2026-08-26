@@ -10,7 +10,7 @@ import { handleProtectedDownload } from '../utils/auth';
 import { API_URL } from '../utils/api';
 import './Home.css';
 
-// --- Data ---
+// Data
 const branches = [
   { id: 'CO', name: 'Computer Engineering', icon: 'CO' },
   { id: 'ME', name: 'Mechanical Engineering', icon: 'ME' },
