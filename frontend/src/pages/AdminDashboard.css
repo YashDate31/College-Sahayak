@@ -1,5 +1,4 @@
-/* ============================================
-   ADMIN DASHBOARD - Modern Control Panel
+/* ADMIN DASHBOARD - Modern Control Panel
    Theme: Navy Blue (#1e3a8a) + Golden (#d97706)
    ============================================ */
 
@@ -8,7 +7,7 @@
   to { transform: rotate(360deg); }
 }
 
-/* === Layout === */
+/* Layout */
 .admin-root {
   display: flex;
   min-height: 100vh;
@@ -16,7 +15,7 @@
   font-family: 'Inter', sans-serif;
 }
 
-/* === Sidebar === */
+/* Sidebar */
 .admin-sidebar {
   width: 260px;
   flex-shrink: 0;
@@ -163,7 +162,7 @@
   border-color: rgba(239, 68, 68, 0.3);
 }
 
-/* === Main Content === */
+/* Main Content */
 .admin-main-content {
   flex: 1;
   display: flex;
@@ -171,7 +170,7 @@
   min-width: 0;
 }
 
-/* === Top Bar === */
+/* Top Bar */
 .admin-topbar {
   background: white;
   border-bottom: 1px solid #e2e8f0;
@@ -218,13 +217,13 @@
   font-weight: 600;
 }
 
-/* === Content Area === */
+/* Content Area */
 .admin-content-area {
   padding: 2rem;
   flex: 1;
 }
 
-/* === Stats Grid === */
+/* Stats Grid */
 .admin-stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -289,7 +288,7 @@
   font-weight: 500;
 }
 
-/* === Panel Card === */
+/* Panel Card */
 .admin-panel {
   background: white;
   border-radius: 16px;
@@ -345,7 +344,7 @@
   padding: 1.5rem 1.75rem;
 }
 
-/* === Pending List Items === */
+/* Pending List Items */
 .pending-list {
   display: flex;
   flex-direction: column;
@@ -492,7 +491,7 @@
   border-color: #ef4444;
 }
 
-/* === Empty State === */
+/* Empty State */
 .admin-empty-state {
   text-align: center;
   padding: 4rem 2rem;
@@ -514,7 +513,7 @@
   font-size: 0.875rem;
 }
 
-/* === Upload Form === */
+/* Upload Form */
 .admin-form {
   display: flex;
   flex-direction: column;
@@ -604,7 +603,7 @@
   cursor: not-allowed;
 }
 
-/* === Alerts === */
+/* Alerts */
 .alert-error {
   background: #fef2f2;
   color: #dc2626;
@@ -633,7 +632,7 @@
   gap: 0.5rem;
 }
 
-/* === Responsive === */
+/* Responsive */
 @media (max-width: 768px) {
   .admin-sidebar { display: none; }
   .admin-topbar { padding: 1rem; }
@@ -644,7 +643,7 @@
   .btn-approve, .btn-reject { flex: 1; justify-content: center; }
 }
 
-/* === Table Styles === */
+/* Table Styles */
 .table-filters {
   display: flex;
   gap: 0.75rem;
@@ -894,7 +893,7 @@
   text-align: right;
 }
 
-/* === Trending Manager === */
+/* Trending Manager */
 .trending-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -925,7 +924,7 @@
   margin: 0;
 }
 
-/* === Feedback Inbox === */
+/* Feedback Inbox */
 .feedback-inbox-container {
   display: flex;
   background: white;
