@@ -111,7 +111,7 @@
 }
 
 .message-bubble {
-  max-width: 80%;
+  max-width: 85%;
   padding: 0.75rem 1rem;
   border-radius: 12px;
   font-size: 0.9rem;
@@ -119,8 +119,8 @@
   display: flex;
   gap: 0.5rem;
   align-items: flex-start;
-  word-break: break-word;
   overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 .message-wrapper.user .message-bubble {
@@ -217,3 +217,22 @@
 }
 
 .message-content p { margin: 0 0 0.5rem 0; } .message-content p:last-child { margin-bottom: 0; } .message-content ul, .message-content ol { margin: 0 0 0.5rem 0; padding-left: 1.5rem; } .message-content h3 { font-size: 1rem; margin: 0.5rem 0; } .message-content strong { font-weight: 600; }
+
+.message-content table {
+  width: 100%;
+  border-collapse: collapse;
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
+  margin: 0.5rem 0;
+}
+
+.message-content th, .message-content td {
+  border: 1px solid #cbd5e1;
+  padding: 0.4rem 0.6rem;
+}
+
+.message-content th {
+  background-color: #f1f5f9;
+  font-weight: 600;
+}
