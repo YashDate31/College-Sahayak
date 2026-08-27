@@ -38,11 +38,30 @@
   padding: 1rem;
   border-bottom: 1px solid #e2e8f0;
   background-color: #f8fafc;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .notification-header h3 {
   margin: 0;
   font-size: 1rem;
+  color: #0f172a;
+}
+
+.notification-close {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.notification-close:hover {
   color: #0f172a;
 }
 

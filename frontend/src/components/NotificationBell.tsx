@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Bell, MessageSquare, AlertCircle } from 'lucide-react';
+import { Bell, MessageSquare, AlertCircle, X } from 'lucide-react';
 import { API_URL } from '../utils/api';
 import './NotificationBell.css';
 
@@ -99,6 +99,9 @@ export function NotificationBell() {
         <div className="notification-dropdown">
           <div className="notification-header">
             <h3>Notifications</h3>
+            <button className="notification-close" onClick={() => setIsOpen(false)}>
+              <X size={18} />
+            </button>
           </div>
           <div className="notification-body">
             {loading ? (
