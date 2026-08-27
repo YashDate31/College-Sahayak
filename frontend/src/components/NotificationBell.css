@@ -115,10 +115,34 @@
   color: #1e293b;
 }
 
-.notification-content p {
+.original-feedback {
+  background-color: #f1f5f9;
+  padding: 0.5rem;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  border-left: 2px solid #cbd5e1;
+}
+
+.feedback-label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 0.2rem;
+  text-transform: uppercase;
+}
+
+.feedback-text {
+  font-size: 0.8rem;
+  color: #475569;
+  font-style: italic;
+  margin: 0;
+}
+
+.reply-text {
   margin: 0 0 0.5rem 0;
   font-size: 0.85rem;
-  color: #475569;
+  color: #334155;
   line-height: 1.4;
   white-space: pre-wrap;
 }
@@ -126,6 +150,17 @@
 .notification-date {
   font-size: 0.75rem;
   color: #94a3b8;
+}
+
+.notification-red-dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  background-color: #ef4444;
+  border-radius: 50%;
+  border: 2px solid white;
 }
 
 /* Mobile adjustments */

@@ -8,13 +8,15 @@ interface NotificationItem {
   type: 'notice' | 'feedback_reply';
   title: string;
   content: string;
+  originalFeedback?: string;
   date: string;
 }
 
 export function NotificationBell() {
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [hasUnread, setHasUnread] = useState(false);
   const bellRef = useRef<HTMLDivElement>(null);
 
   const getAuthToken = () => localStorage.getItem('auth_token') || '';
@@ -55,6 +57,7 @@ export function NotificationBell() {
               type: 'feedback_reply',
               title: `Reply to your ${f.type} feedback`,
               content: f.reply,
+              originalFeedback: f.message,
               date: f.replied_at || f.created_at
             });
           }
@@ -63,12 +66,25 @@ export function NotificationBell() {
 
       combined.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
       setNotifications(combined);
+
+      // Check for unread notifications
+      if (combined.length > 0) {
+        const lastRead = localStorage.getItem('last_notification_read');
+        if (!lastRead || new Date(combined[0].date).getTime() > new Date(lastRead).getTime()) {
+          setHasUnread(true);
+        }
+      }
     } catch (err) {
       console.error('Failed to fetch notifications', err);
     } finally {
       setLoading(false);
     }
   };
+
+  // Fetch on mount to check for unread
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -82,6 +98,11 @@ export function NotificationBell() {
 
   const handleToggle = () => {
     if (!isOpen) {
+      // Mark as read
+      if (notifications.length > 0) {
+        localStorage.setItem('last_notification_read', notifications[0].date);
+      }
+      setHasUnread(false);
       fetchNotifications();
     }
     setIsOpen(!isOpen);
@@ -93,6 +114,7 @@ export function NotificationBell() {
     <div className="notification-bell-container" ref={bellRef}>
       <button className="nav-link notification-trigger" onClick={handleToggle}>
         <Bell size={18} />
+        {hasUnread && <span className="notification-red-dot"></span>}
       </button>
 
       {isOpen && (
@@ -119,7 +141,13 @@ export function NotificationBell() {
                   </div>
                   <div className="notification-content">
                     <h4>{item.title}</h4>
-                    <p>{item.content}</p>
+                    {item.originalFeedback && (
+                      <div className="original-feedback">
+                        <span className="feedback-label">Your feedback:</span>
+                        <p className="feedback-text">"{item.originalFeedback}"</p>
+                      </div>
+                    )}
+                    <p className="reply-text">{item.content}</p>
                     <span className="notification-date">{new Date(item.date).toLocaleString()}</span>
                   </div>
                 </div>
