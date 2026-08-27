@@ -7,7 +7,7 @@ import {
   BookOpen, LogOut, PlusCircle, Upload, CheckCircle, List,
   FileText, Check, Trash2, Clock, Users, Database, RefreshCw,
   LayoutDashboard, ExternalLink, AlertCircle, GraduationCap,
-  BookMarked, Flame, Star, Table2, Eye, EyeOff, Inbox, MailOpen, Mail
+  BookMarked, Flame, Star, Table2, Eye, EyeOff, Inbox, MailOpen, Mail, MessageSquare, Send, Bell
 } from 'lucide-react';
 import { API_URL } from '../utils/api';
 import './AdminDashboard.css';
@@ -30,13 +30,21 @@ interface FeedbackItem {
   type: string;
   message: string;
   email: string;
-  status: 'read' | 'unread';
+  status: 'read' | 'unread' | 'replied';
+  reply?: string;
+  created_at: string;
+}
+
+interface Notice {
+  id: string;
+  title: string;
+  content: string;
   created_at: string;
 }
 
 export function AdminDashboard() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'overview' | 'upload' | 'pending' | 'table' | 'trending' | 'feedback'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'upload' | 'pending' | 'table' | 'trending' | 'feedback' | 'notices'>('overview');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
@@ -50,6 +58,14 @@ export function AdminDashboard() {
   const [feedbackItems, setFeedbackItems] = useState<FeedbackItem[]>([]);
   const [fetchingFeedback, setFetchingFeedback] = useState(false);
   const [selectedFeedback, setSelectedFeedback] = useState<FeedbackItem | null>(null);
+  const [replyText, setReplyText] = useState('');
+  const [sendingReply, setSendingReply] = useState(false);
+
+  // Notices State
+  const [notices, setNotices] = useState<Notice[]>([]);
+  const [noticeTitle, setNoticeTitle] = useState('');
+  const [noticeContent, setNoticeContent] = useState('');
+  const [postingNotice, setPostingNotice] = useState(false);
 
   // Table search/filter
   const [tableSearch, setTableSearch] = useState('');
@@ -108,9 +124,26 @@ export function AdminDashboard() {
     }
   };
 
+  const fetchNotices = async () => {
+    try {
+      const token = getAuthToken();
+      if (!token) return;
+      const res = await fetch(`${API_URL}/api/notices`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        setNotices(data);
+      }
+    } catch (err) {
+      console.error('Failed to fetch notices');
+    }
+  };
+
   useEffect(() => {
     fetchAllMaterials();
     fetchFeedback();
+    fetchNotices();
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -253,6 +286,75 @@ export function AdminDashboard() {
     } catch (err) { alert(err); }
   };
 
+  const handleSendReply = async () => {
+    if (!selectedFeedback || !replyText.trim()) return;
+    setSendingReply(true);
+    try {
+      const token = getAuthToken();
+      if (!token) throw new Error('Not authenticated');
+      const response = await fetch(`${API_URL}/api/feedback/${selectedFeedback.id}/reply`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ reply: replyText })
+      });
+      
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.error || 'Failed to send reply');
+      }
+      
+      setReplyText('');
+      fetchFeedback();
+      setSelectedFeedback({ ...selectedFeedback, status: 'replied', reply: replyText });
+    } catch (err: any) {
+      alert(err.message || 'Failed to send reply');
+    } finally {
+      setSendingReply(false);
+    }
+  };
+
+  const handlePostNotice = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!noticeTitle.trim() || !noticeContent.trim()) return;
+    setPostingNotice(true);
+    try {
+      const token = getAuthToken();
+      if (!token) throw new Error('Not authenticated');
+      const response = await fetch(`${API_URL}/api/notices`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ title: noticeTitle, content: noticeContent })
+      });
+      
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.error || 'Failed to post notice');
+      }
+      
+      setNoticeTitle('');
+      setNoticeContent('');
+      alert('Notice posted successfully!');
+      fetchNotices();
+    } catch (err: any) {
+      alert(err.message || 'Failed to post notice');
+    } finally {
+      setPostingNotice(false);
+    }
+  };
+
+  const handleDeleteNotice = async (id: string) => {
+    if (!window.confirm('Delete this notice?')) return;
+    try {
+      const token = getAuthToken();
+      if (!token) throw new Error('Not authenticated');
+      await fetch(`${API_URL}/api/notices/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      fetchNotices();
+    } catch (err) { alert(err); }
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('auth_token');
     // Also sign out Firebase if user had Google-login session
@@ -267,6 +369,7 @@ export function AdminDashboard() {
     { id: 'table', label: 'All Materials', icon: <Table2 size={18} /> },
     { id: 'trending', label: 'Manage Trending', icon: <Flame size={18} /> },
     { id: 'feedback', label: 'User Feedback', icon: <Inbox size={18} />, badge: feedbackItems.filter(f => f.status === 'unread').length > 0 ? feedbackItems.filter(f => f.status === 'unread').length : undefined },
+    { id: 'notices', label: 'Global Notices', icon: <Bell size={18} /> },
   ];
 
   const topbarTitles: Record<string, { title: string; sub: string }> = {
@@ -276,6 +379,7 @@ export function AdminDashboard() {
     table: { title: 'All Materials', sub: `${activeMaterials.length} active resources` },
     trending: { title: 'Manage Trending', sub: 'Pin materials on the homepage' },
     feedback: { title: 'Feedback Inbox', sub: `Manage user feedback and feature requests` },
+    notices: { title: 'Global Notices', sub: `Post announcements to all users` },
   };
 
   const filteredTableMaterials = activeMaterials.filter(m => {
@@ -721,6 +825,7 @@ export function AdminDashboard() {
                           {item.type === 'suggestion' && <span className="feedback-badge suggestion">Suggestion</span>}
                           {item.type === 'content' && <span className="feedback-badge content">Request</span>}
                           {item.type === 'other' && <span className="feedback-badge other">Other</span>}
+                          {item.status === 'replied' && <span className="feedback-badge replied" style={{ background: '#dcfce7', color: '#166534', marginLeft: '0.5rem' }}><Check size={10} style={{marginRight: '2px'}}/>Replied</span>}
                         </div>
                         <p className="feedback-item-preview">{item.message}</p>
                       </div>
@@ -764,6 +869,35 @@ export function AdminDashboard() {
                     <div className="feedback-view-body">
                       <p style={{ whiteSpace: 'pre-wrap' }}>{selectedFeedback.message}</p>
                     </div>
+                    <div className="feedback-view-reply">
+                      {selectedFeedback.status === 'replied' ? (
+                        <div className="reply-sent-box" style={{ marginTop: '1.5rem', padding: '1rem', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                          <h4 style={{ margin: '0 0 0.5rem', color: '#0f172a', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <CheckCircle size={16} color="#16a34a"/> You Replied
+                          </h4>
+                          <p style={{ margin: 0, color: '#334155', whiteSpace: 'pre-wrap', fontSize: '0.9rem' }}>{selectedFeedback.reply}</p>
+                        </div>
+                      ) : (
+                        <div className="reply-input-box" style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                          <h4 style={{ margin: 0, color: '#0f172a', fontSize: '0.95rem' }}>Send a Reply</h4>
+                          <textarea 
+                            value={replyText}
+                            onChange={(e) => setReplyText(e.target.value)}
+                            placeholder="Type your response to the user here..."
+                            rows={4}
+                            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', resize: 'vertical', fontFamily: 'inherit' }}
+                          />
+                          <button 
+                            className="btn-publish" 
+                            style={{ alignSelf: 'flex-start' }}
+                            onClick={handleSendReply}
+                            disabled={sendingReply || !replyText.trim()}
+                          >
+                            {sendingReply ? <><RefreshCw size={16} className="animate-spin"/> Sending...</> : <><Send size={16}/> Send Reply</>}
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 ) : (
                   <div className="feedback-view-empty">
@@ -773,6 +907,90 @@ export function AdminDashboard() {
                   </div>
                 )}
               </div>
+            </div>
+          )}
+
+          {/* ── GLOBAL NOTICES ── */}
+          {activeTab === 'notices' && (
+            <div className="admin-panel" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', background: 'transparent', boxShadow: 'none', padding: 0 }}>
+              
+              {/* Post Notice Form */}
+              <div className="admin-panel" style={{ margin: 0, height: 'fit-content' }}>
+                <div className="admin-panel-header">
+                  <div className="admin-panel-header-left">
+                    <h2>Post a New Notice</h2>
+                    <p>This will be visible to all users in their notification panel.</p>
+                  </div>
+                </div>
+                <div className="admin-panel-body">
+                  <form onSubmit={handlePostNotice} className="admin-form">
+                    <div className="form-group full-width">
+                      <label>Notice Title *</label>
+                      <input 
+                        type="text" 
+                        value={noticeTitle} 
+                        onChange={(e) => setNoticeTitle(e.target.value)} 
+                        required 
+                        placeholder="e.g. Server Maintenance, New Feature" 
+                      />
+                    </div>
+                    <div className="form-group full-width">
+                      <label>Notice Content *</label>
+                      <textarea 
+                        value={noticeContent} 
+                        onChange={(e) => setNoticeContent(e.target.value)} 
+                        required 
+                        rows={5} 
+                        placeholder="Type the announcement here..." 
+                      />
+                    </div>
+                    <div className="form-actions">
+                      <button type="submit" className="btn-publish" disabled={postingNotice}>
+                        {postingNotice ? 'Posting...' : <><Bell size={16} /> Post Notice</>}
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+
+              {/* Active Notices List */}
+              <div className="admin-panel" style={{ margin: 0 }}>
+                <div className="admin-panel-header">
+                  <div className="admin-panel-header-left">
+                    <h2>Active Notices</h2>
+                    <p>Currently live notices</p>
+                  </div>
+                </div>
+                <div className="admin-panel-body" style={{ padding: 0 }}>
+                  {notices.length === 0 ? (
+                    <div className="admin-empty-state" style={{ padding: '3rem 1rem' }}>
+                      <Bell size={48} />
+                      <h3>No Active Notices</h3>
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      {notices.map(notice => (
+                        <div key={notice.id} style={{ padding: '1.25rem', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                          <div>
+                            <h4 style={{ margin: '0 0 0.4rem', color: '#0f172a' }}>{notice.title}</h4>
+                            <p style={{ margin: '0 0 0.5rem', color: '#475569', fontSize: '0.9rem', whiteSpace: 'pre-wrap' }}>{notice.content}</p>
+                            <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>{new Date(notice.created_at).toLocaleString()}</span>
+                          </div>
+                          <button 
+                            className="table-action-del" 
+                            onClick={() => handleDeleteNotice(notice.id)} 
+                            title="Delete Notice"
+                            style={{ flexShrink: 0 }}
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
             </div>
           )}
 

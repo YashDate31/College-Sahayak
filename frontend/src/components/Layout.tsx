@@ -4,6 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { BookOpen, GraduationCap, LogIn, Menu, MessageSquare, User, X } from 'lucide-react';
 import { CookieBanner } from './CookieBanner';
 import { Chatbot } from './Chatbot';
+import { NotificationBell } from './NotificationBell';
 import './Layout.css';
 
 const navItems = [
@@ -56,10 +57,13 @@ export function Layout({ children }: { children: ReactNode }) {
             
             {/* Conditional Auth Links */}
             {localStorage.getItem('auth_token') ? (
-              <Link to="/profile" className="nav-link">
-                <User size={16} />
-                <span>Profile</span>
-              </Link>
+              <>
+                <Link to="/profile" className="nav-link">
+                  <User size={16} />
+                  <span>Profile</span>
+                </Link>
+                <NotificationBell />
+              </>
             ) : (
               <Link to="/login" className="nav-link login-link">
                 <LogIn size={16} />
@@ -73,12 +77,17 @@ export function Layout({ children }: { children: ReactNode }) {
             </Link>
           </div>
 
-          <button
-            className="mobile-menu-btn desktop-hidden"
-            onClick={() => setMenuOpen(!menuOpen)}
-          >
-            {menuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div className="desktop-hidden">
+              <NotificationBell />
+            </div>
+            <button
+              className="mobile-menu-btn desktop-hidden"
+              onClick={() => setMenuOpen(!menuOpen)}
+            >
+              {menuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </nav>
 
         {menuOpen && (
@@ -95,13 +104,16 @@ export function Layout({ children }: { children: ReactNode }) {
             ))}
             {/* Conditional Mobile Auth Links */}
             {localStorage.getItem('auth_token') ? (
-              <Link
-                to="/profile"
-                className="mobile-nav-link"
-                onClick={() => setMenuOpen(false)}
-              >
-                Profile
-              </Link>
+              <>
+                <Link
+                  to="/profile"
+                  className="mobile-nav-link"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Profile
+                </Link>
+                {/* On mobile we render a simple link for notifications, or maybe NotificationBell handles itself better via fixed position. We'll just show it in the header for mobile, wait, NotificationBell is in .desktop-only. Let's make it visible on mobile header. */}
+              </>
             ) : (
               <Link
                 to="/login"
