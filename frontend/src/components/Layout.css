@@ -240,12 +240,12 @@
 
 @media (max-width: 767px) {
   .desktop-only {
-    display: none;
+    display: none !important;
   }
 }
 
 @media (min-width: 768px) {
   .desktop-hidden {
-    display: none;
+    display: none !important;
   }
 }

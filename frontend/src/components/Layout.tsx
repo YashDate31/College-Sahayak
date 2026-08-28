@@ -41,7 +41,7 @@ export function Layout({ children }: { children: ReactNode }) {
         <nav className="navbar container">
           <Brand />
 
-          <div className="nav-links desktop-only" style={{ display: 'flex', alignItems: 'center' }}>
+          <div className="nav-links desktop-only">
             <button 
               onClick={() => setSearchOpen(true)}
               className="nav-link search-btn-desktop"
