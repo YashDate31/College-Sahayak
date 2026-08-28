@@ -44,7 +44,7 @@ interface Notice {
 
 export function AdminDashboard() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'overview' | 'upload' | 'pending' | 'table' | 'trending' | 'feedback' | 'notices'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'upload' | 'pending' | 'table' | 'trending' | 'feedback' | 'notices' | 'leaderboard'>('overview');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
@@ -67,9 +67,11 @@ export function AdminDashboard() {
   const [noticeContent, setNoticeContent] = useState('');
   const [postingNotice, setPostingNotice] = useState(false);
 
-  // Table search/filter
   const [tableSearch, setTableSearch] = useState('');
   const [tableCategory, setTableCategory] = useState('');
+
+  // Leaderboard State
+  const [leaderboard, setLeaderboard] = useState<{name: string; points: number}[]>([]);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -140,10 +142,23 @@ export function AdminDashboard() {
     }
   };
 
+  const fetchLeaderboard = async () => {
+    try {
+      const res = await fetch(`${API_URL}/api/users/leaderboard`);
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        setLeaderboard(data);
+      }
+    } catch (err) {
+      console.error('Failed to fetch leaderboard');
+    }
+  };
+
   useEffect(() => {
     fetchAllMaterials();
     fetchFeedback();
     fetchNotices();
+    fetchLeaderboard();
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -370,6 +385,7 @@ export function AdminDashboard() {
     { id: 'trending', label: 'Manage Trending', icon: <Flame size={18} /> },
     { id: 'feedback', label: 'User Feedback', icon: <Inbox size={18} />, badge: feedbackItems.filter(f => f.status === 'unread').length > 0 ? feedbackItems.filter(f => f.status === 'unread').length : undefined },
     { id: 'notices', label: 'Global Notices', icon: <Bell size={18} /> },
+    { id: 'leaderboard', label: 'Top Contributors', icon: <Star size={18} /> },
   ];
 
   const topbarTitles: Record<string, { title: string; sub: string }> = {
@@ -380,6 +396,7 @@ export function AdminDashboard() {
     trending: { title: 'Manage Trending', sub: 'Pin materials on the homepage' },
     feedback: { title: 'Feedback Inbox', sub: `Manage user feedback and feature requests` },
     notices: { title: 'Global Notices', sub: `Post announcements to all users` },
+    leaderboard: { title: 'Top Contributors', sub: 'Students with most approved uploads' },
   };
 
   const filteredTableMaterials = activeMaterials.filter(m => {
@@ -540,6 +557,38 @@ export function AdminDashboard() {
                   ))}
                 </div>
               </div>
+
+              {/* Leaderboard preview in overview */}
+              {leaderboard.length > 0 && (
+                <div className="admin-panel" style={{ marginTop: '1.5rem' }}>
+                  <div className="admin-panel-header">
+                    <div className="admin-panel-header-left">
+                      <h2>Top Contributors 🏆</h2>
+                      <p>Students earning points by uploading resources</p>
+                    </div>
+                    <button
+                      className="admin-nav-item"
+                      style={{ padding: '0.4rem 0.8rem', borderRadius: '6px', border: '1px solid #e2e8f0', color: '#64748b', fontSize: '0.8rem' }}
+                      onClick={() => setActiveTab('leaderboard' as any)}
+                    >
+                      View All
+                    </button>
+                  </div>
+                  <div className="admin-panel-body">
+                    {leaderboard.slice(0, 3).map((user, index) => (
+                      <div key={index} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem 0', borderBottom: index < 2 ? '1px solid #f1f5f9' : 'none' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                          <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: index === 0 ? '#fbbf24' : index === 1 ? '#94a3b8' : '#b45309', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '0.8rem' }}>
+                            #{index + 1}
+                          </div>
+                          <span style={{ fontWeight: 600, color: '#1e293b' }}>{user.name || 'Anonymous'}</span>
+                        </div>
+                        <span style={{ fontWeight: 600, color: '#0056b3', fontSize: '0.85rem' }}>{user.points} pts</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </>
           )}
 
@@ -1081,6 +1130,53 @@ export function AdminDashboard() {
                     </button>
                   </div>
                 </form>
+              </div>
+            </div>
+          )}
+
+          {/* ── LEADERBOARD ── */}
+          {activeTab === 'leaderboard' && (
+            <div className="admin-panel">
+              <div className="admin-panel-header">
+                <div className="admin-panel-header-left">
+                  <h2>Top Contributors 🏆</h2>
+                  <p>Students who earn points by having their uploads approved</p>
+                </div>
+                <button
+                  className="admin-nav-item"
+                  style={{ padding: '0.4rem 0.8rem', borderRadius: '6px', border: '1px solid #e2e8f0', color: '#64748b', fontSize: '0.8rem' }}
+                  onClick={fetchLeaderboard}
+                >
+                  <RefreshCw size={14} /> Refresh
+                </button>
+              </div>
+              <div className="admin-panel-body">
+                {leaderboard.length === 0 ? (
+                  <div style={{ padding: '2rem', textAlign: 'center', color: '#94a3b8' }}>
+                    <Star size={32} style={{ opacity: 0.5, marginBottom: '0.5rem' }} />
+                    <p>No contributors yet. Points are awarded when student uploads are approved.</p>
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+                    {leaderboard.map((user, index) => (
+                      <div key={index} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', borderBottom: index < leaderboard.length - 1 ? '1px solid #f1f5f9' : 'none' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                          <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: index === 0 ? '#fbbf24' : index === 1 ? '#94a3b8' : index === 2 ? '#b45309' : '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: index < 3 ? 'white' : '#475569', fontWeight: 'bold', fontSize: '0.85rem' }}>
+                            #{index + 1}
+                          </div>
+                          <div>
+                            <p style={{ margin: 0, fontWeight: 600, color: '#1e293b' }}>{user.name || 'Anonymous Student'}</p>
+                            <span style={{ fontSize: '0.8rem', color: '#64748b' }}>Contributor</span>
+                          </div>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0056b3', fontWeight: '600', backgroundColor: '#eff6ff', padding: '0.4rem 0.8rem', borderRadius: '20px', fontSize: '0.85rem' }}>
+                          <Flame size={16} style={{ color: '#ef4444' }} />
+                          <span>{user.points} pts</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           )}

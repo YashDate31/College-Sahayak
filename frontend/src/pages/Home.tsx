@@ -42,11 +42,6 @@ interface TrendingMaterial {
   drive_link: string;
 }
 
-interface LeaderboardUser {
-  name: string;
-  points: number;
-}
-
 const officialUpdates = [
   { title: 'MSBTE Summer 2025 Exam Schedule Released', description: 'Check exam dates and prepare with the complete timetable.', type: 'Exam Schedule', date: 'Jan 15, 2025', priority: 'High' },
   { title: 'New Curriculum Updates for AY 2024-25', description: 'Updated syllabus for Computer and Electronics Engineering branches.', type: 'Curriculum', date: 'Jan 12, 2025', priority: 'Medium' },
@@ -87,7 +82,6 @@ export function Home() {
   const [selectedBranch, setSelectedBranch] = useState<string | null>(null);
   const [selectedSemester, setSelectedSemester] = useState<number | null>(null);
   const [trendingMaterials, setTrendingMaterials] = useState<TrendingMaterial[]>([]);
-  const [topContributors, setTopContributors] = useState<LeaderboardUser[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -97,15 +91,6 @@ export function Home() {
         if (Array.isArray(data)) {
           const trending = data.filter((m: any) => m.is_trending && !m.title.startsWith('[PENDING]'));
           setTrendingMaterials(trending);
-        }
-      })
-      .catch(() => {});
-      
-    fetch(`${API_URL}/api/users/leaderboard`)
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data)) {
-          setTopContributors(data);
         }
       })
       .catch(() => {});
@@ -189,64 +174,28 @@ export function Home() {
       </section>
 
       {/* 2. Quick Resources Section */}
-        <section className="section bg-light">
-          <div className="container">
-            <SectionHeading 
-              title="Quick Access Resources" 
-              description="Jump directly to what you need"
-              icon={ClipboardList}
-            />
-            <div className="resources-grid">
-              {quickResources.map((resource) => {
-                const Icon = resource.icon;
-                return (
-                  <Link key={resource.name} to={resource.path} className="resource-card">
-                    <div className={`resource-icon-wrapper ${resource.color}`}>
-                      <Icon size={24} />
-                    </div>
-                    <div className="resource-content">
-                      <h3 className="resource-title">{resource.name}</h3>
-                      <p className="resource-desc">{resource.description}</p>
-                    </div>
-                    <ChevronRight size={16} className="resource-arrow" />
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-        {/* Top Contributors Leaderboard Section */}
-        {topContributors.length > 0 && (
-          <section className="section bg-light" style={{ borderTop: '1px solid #e2e8f0' }}>
-            <div className="container">
-              <SectionHeading 
-                title="Top Contributors 🏆" 
-                description="Students helping the community by sharing notes and practicals"
-                icon={Award}
-              />
-              <div className="leaderboard-grid" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', maxWidth: '600px', margin: '0 auto' }}>
-                {topContributors.map((user, index) => (
-                  <div key={index} className="leaderboard-card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', backgroundColor: 'white', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0,0,0,0.05)', border: '1px solid #f1f5f9' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                      <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: index === 0 ? '#fbbf24' : index === 1 ? '#94a3b8' : index === 2 ? '#b45309' : '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: index < 3 ? 'white' : '#475569', fontWeight: 'bold' }}>
-                        #{index + 1}
-                      </div>
-                      <div>
-                        <h4 style={{ margin: 0, color: '#1e293b', fontSize: '1.05rem' }}>{user.name || 'Anonymous Student'}</h4>
-                        <span style={{ fontSize: '0.85rem', color: '#64748b' }}>Top Uploader</span>
-                      </div>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0056b3', fontWeight: '600', backgroundColor: '#eff6ff', padding: '0.5rem 1rem', borderRadius: '20px' }}>
-                      <Flame size={18} style={{ color: '#ef4444' }} />
-                      <span>{user.points} pts</span>
-                    </div>
+      <section className="section bg-light">
+        <div className="container">
+          <SectionHeading title="Quick Access Resources" description="Jump directly to what you need" />
+          <div className="grid resource-grid">
+            {quickResources.map((resource) => {
+              const Icon = resource.icon;
+              return (
+                <Link key={resource.name} to={resource.path} className="resource-card group">
+                  <div className={`resource-icon ${resource.color}`}>
+                    <Icon size={24} />
                   </div>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
+                  <h3>{resource.name}</h3>
+                  <p>{resource.description}</p>
+                  <div className="resource-link">
+                    Access Now <ChevronRight size={16} />
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </section>
 
       {/* 3. Trending Materials */}
       {trendingMaterials.length > 0 && (

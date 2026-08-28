@@ -48,7 +48,7 @@ export function Layout({ children }: { children: ReactNode }) {
               style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#f1f5f9', padding: '0.4rem 0.8rem', borderRadius: '20px', border: '1px solid #e2e8f0' }}
             >
               <Search size={16} />
-              <span>Search... <kbd style={{ marginLeft: '0.25rem', padding: '0.1rem 0.3rem', background: 'white', borderRadius: '4px', fontSize: '0.7rem', border: '1px solid #cbd5e1' }}>⌘K</kbd></span>
+              <span>Search... <kbd style={{ marginLeft: '0.25rem', padding: '0.1rem 0.3rem', background: 'white', borderRadius: '4px', fontSize: '0.7rem', border: '1px solid #cbd5e1' }}>Ctrl+K</kbd></span>
             </button>
             {navItems.map((item) => {
               const Icon = item.icon;
