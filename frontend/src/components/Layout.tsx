@@ -19,13 +19,13 @@ const navItems = [
 function Brand({ inverse = false }: { inverse?: boolean }) {
   return (
     <Link to="/" className={`brand ${inverse ? 'brand-inverse' : ''}`} style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-      <div style={{ position: 'relative', width: '3rem', height: '3rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#1e3a8a' }}>
-        <BookOpen size={36} strokeWidth={1.5} />
+      <div className="brand-logo-container" style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#1e3a8a' }}>
+        <BookOpen className="brand-book-icon" strokeWidth={1.5} />
         <div style={{ position: 'absolute', top: 0, color: '#d97706' }}>
-          <GraduationCap size={24} strokeWidth={2} />
+          <GraduationCap className="brand-cap-icon" strokeWidth={2} />
         </div>
       </div>
-      <span className="brand-text" style={{ fontSize: '1.6rem', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.03em' }}>College Sahayak</span>
+      <span className="brand-text" style={{ fontWeight: 800, color: '#0f172a', letterSpacing: '-0.03em' }}>College Sahayak</span>
     </Link>
   );
 }
@@ -44,11 +44,11 @@ export function Layout({ children }: { children: ReactNode }) {
           <div className="nav-links desktop-only" style={{ display: 'flex', alignItems: 'center' }}>
             <button 
               onClick={() => setSearchOpen(true)}
-              className="nav-link"
-              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#f1f5f9', padding: '0.4rem 0.8rem', borderRadius: '20px', border: '1px solid #e2e8f0' }}
+              className="nav-link search-btn-desktop"
+              title="Search (Ctrl+K)"
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f1f5f9', width: '36px', height: '36px', borderRadius: '50%', border: '1px solid #e2e8f0', color: '#475569' }}
             >
-              <Search size={16} />
-              <span>Search... <kbd style={{ marginLeft: '0.25rem', padding: '0.1rem 0.3rem', background: 'white', borderRadius: '4px', fontSize: '0.7rem', border: '1px solid #cbd5e1' }}>Ctrl+K</kbd></span>
+              <Search size={18} />
             </button>
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -87,22 +87,23 @@ export function Layout({ children }: { children: ReactNode }) {
             </Link>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
             <button 
               className="mobile-menu-btn desktop-hidden"
               onClick={() => setSearchOpen(true)}
-              style={{ color: '#475569' }}
+              style={{ color: '#475569', padding: '0.25rem' }}
             >
-              <Search size={22} />
+              <Search size={20} />
             </button>
-            <div className="desktop-hidden">
+            <div className="desktop-hidden" style={{ padding: '0.25rem' }}>
               <NotificationBell />
             </div>
             <button
               className="mobile-menu-btn desktop-hidden"
               onClick={() => setMenuOpen(!menuOpen)}
+              style={{ padding: '0.25rem' }}
             >
-              {menuOpen ? <X size={24} /> : <Menu size={24} />}
+              {menuOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
           </div>
         </nav>
