@@ -144,6 +144,12 @@
   opacity: 0.7;
 }
 
+.message-content {
+  flex: 1;
+  min-width: 0; /* Prevents flex child from blowing out parent's max-width */
+  max-width: 100%;
+}
+
 .chatbot-input {
   display: flex;
   padding: 0.75rem;
