@@ -48,7 +48,7 @@ export function Layout({ children }: { children: ReactNode }) {
               title="Search (Ctrl+K)"
               style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f1f5f9', width: '36px', height: '36px', borderRadius: '50%', border: '1px solid #e2e8f0', color: '#475569' }}
             >
-              <Search size={18} />
+              <Search size={20} />
             </button>
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -93,7 +93,7 @@ export function Layout({ children }: { children: ReactNode }) {
               onClick={() => setSearchOpen(true)}
               style={{ color: '#475569', padding: '0.25rem' }}
             >
-              <Search size={20} />
+              <Search size={24} />
             </button>
             <div className="desktop-hidden" style={{ padding: '0.25rem' }}>
               <NotificationBell />
@@ -103,7 +103,7 @@ export function Layout({ children }: { children: ReactNode }) {
               onClick={() => setMenuOpen(!menuOpen)}
               style={{ padding: '0.25rem' }}
             >
-              {menuOpen ? <X size={22} /> : <Menu size={22} />}
+              {menuOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
           </div>
         </nav>

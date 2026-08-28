@@ -113,7 +113,7 @@ export function NotificationBell() {
   return (
     <div className="notification-bell-container" ref={bellRef}>
       <button className="nav-link notification-trigger" onClick={handleToggle}>
-        <Bell size={18} />
+        <Bell size={22} />
         {hasUnread && <span className="notification-red-dot"></span>}
       </button>
 
