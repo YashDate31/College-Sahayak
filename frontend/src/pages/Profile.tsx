@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Mail, Phone, Building2, Edit2, Shield, LogOut } from 'lucide-react';
+import { User, Mail, Phone, Building2, Edit2, Shield, LogOut, Flame } from 'lucide-react';
 import { jwtDecode } from 'jwt-decode';
+import { API_URL } from '../utils/api';
 import './Profile.css';
 
 export function Profile() {
@@ -24,7 +25,25 @@ export function Profile() {
     try {
       const decoded: any = jwtDecode(token);
       setFirebaseUser(decoded);
-      setLoading(false);
+      
+      // Fetch full user profile including points
+      fetch(`${API_URL}/api/users/me`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data && !data.error) {
+          setFirebaseUser((prev: any) => ({...prev, ...data}));
+        }
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Error fetching user profile:', err);
+        setLoading(false);
+      });
+      
     } catch (e) {
       localStorage.removeItem('auth_token');
       window.dispatchEvent(new Event('force-login'));
@@ -41,6 +60,7 @@ export function Profile() {
     lastName: firebaseUser?.name?.split(' ')[1] || firebaseUser?.displayName?.split(' ')[1] || '',
     email: firebaseUser?.email || 'Not provided',
     role: firebaseUser?.role || 'student',
+    points: firebaseUser?.points || 0,
     mobile: mobile,
     college: college
   };
@@ -76,14 +96,20 @@ export function Profile() {
                 </h2>
                 <p className="profile-email">{user.email}</p>
               </div>
-              <button 
-                className={isEditing ? "btn btn-outline btn-sm" : "btn btn-primary btn-sm"}
-                style={{ padding: '0.5rem 1rem', borderRadius: 'var(--radius-full)' }}
-                onClick={() => setIsEditing(!isEditing)}
-              >
-                <Edit2 size={16} style={{ marginRight: '0.5rem', display: 'inline' }} />
-                {isEditing ? 'Cancel Edit' : 'Edit Profile'}
-              </button>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.75rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0056b3', fontWeight: '600', backgroundColor: '#eff6ff', padding: '0.5rem 1rem', borderRadius: '20px' }}>
+                  <Flame size={18} style={{ color: '#ef4444' }} />
+                  <span>{user.points} pts</span>
+                </div>
+                <button 
+                  className={isEditing ? "btn btn-outline btn-sm" : "btn btn-primary btn-sm"}
+                  style={{ padding: '0.5rem 1rem', borderRadius: 'var(--radius-full)' }}
+                  onClick={() => setIsEditing(!isEditing)}
+                >
+                  <Edit2 size={16} style={{ marginRight: '0.5rem', display: 'inline' }} />
+                  {isEditing ? 'Cancel Edit' : 'Edit Profile'}
+                </button>
+              </div>
             </div>
 
             <div className="profile-details-grid">

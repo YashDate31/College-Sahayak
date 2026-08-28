@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { BookOpen, GraduationCap, LogIn, Menu, MessageSquare, User, X } from 'lucide-react';
+import { BookOpen, GraduationCap, LogIn, Menu, MessageSquare, User, X, Search } from 'lucide-react';
 import { CookieBanner } from './CookieBanner';
 import { Chatbot } from './Chatbot';
 import { NotificationBell } from './NotificationBell';
+import { SearchModal } from './SearchModal';
 import './Layout.css';
 
 const navItems = [
@@ -31,6 +32,7 @@ function Brand({ inverse = false }: { inverse?: boolean }) {
 
 export function Layout({ children }: { children: ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const location = useLocation();
 
   return (
@@ -39,7 +41,15 @@ export function Layout({ children }: { children: ReactNode }) {
         <nav className="navbar container">
           <Brand />
 
-          <div className="nav-links desktop-only">
+          <div className="nav-links desktop-only" style={{ display: 'flex', alignItems: 'center' }}>
+            <button 
+              onClick={() => setSearchOpen(true)}
+              className="nav-link"
+              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#f1f5f9', padding: '0.4rem 0.8rem', borderRadius: '20px', border: '1px solid #e2e8f0' }}
+            >
+              <Search size={16} />
+              <span>Search... <kbd style={{ marginLeft: '0.25rem', padding: '0.1rem 0.3rem', background: 'white', borderRadius: '4px', fontSize: '0.7rem', border: '1px solid #cbd5e1' }}>⌘K</kbd></span>
+            </button>
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = location.pathname === item.to && item.to !== '/';
@@ -78,6 +88,13 @@ export function Layout({ children }: { children: ReactNode }) {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <button 
+              className="mobile-menu-btn desktop-hidden"
+              onClick={() => setSearchOpen(true)}
+              style={{ color: '#475569' }}
+            >
+              <Search size={22} />
+            </button>
             <div className="desktop-hidden">
               <NotificationBell />
             </div>
@@ -167,6 +184,7 @@ export function Layout({ children }: { children: ReactNode }) {
 
       <CookieBanner />
       <Chatbot />
+      <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
     </div>
   );
 }

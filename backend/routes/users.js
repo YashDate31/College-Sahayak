@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const supabase = require('../config/supabase');
 const verifyTokenOnly = require('../middleware/authVerifyOnly');
+const verifyAuth = require('../middleware/auth');
 const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-me-in-production';
@@ -83,6 +84,54 @@ router.post('/sync', verifyTokenOnly, async (req, res) => {
     });
   } catch (err) {
     console.error('Error syncing user:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.get('/leaderboard', async (req, res) => {
+  if (!supabase) {
+    return res.status(500).json({ error: 'Supabase client not initialized' });
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('users')
+      .select('name, points')
+      .order('points', { ascending: false })
+      .limit(5);
+
+    if (error) {
+      console.error('Supabase fetch leaderboard error:', error);
+      return res.status(500).json({ error: 'Database error fetching leaderboard' });
+    }
+
+    res.status(200).json(data);
+  } catch (err) {
+    console.error('Error fetching leaderboard:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.get('/me', verifyAuth, async (req, res) => {
+  if (!supabase) {
+    return res.status(500).json({ error: 'Supabase client not initialized' });
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('users')
+      .select('name, email, role, points')
+      .eq('id', req.user.id)
+      .single();
+
+    if (error) {
+      console.error('Supabase fetch user error:', error);
+      return res.status(500).json({ error: 'Database error fetching user' });
+    }
+
+    res.status(200).json(data);
+  } catch (err) {
+    console.error('Error fetching user:', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 });

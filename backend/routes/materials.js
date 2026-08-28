@@ -119,6 +119,10 @@ router.put('/:id/approve', verifyAuth, async (req, res) => {
   const { title } = req.body;
 
   try {
+    // Extract email if present
+    const emailMatch = title.match(/\[by:(.*?)\]/i);
+    const uploaderEmail = emailMatch ? emailMatch[1] : null;
+
     // Remove [PENDING] and optional [by:email] prefix from title to publish it
     const newTitle = title.replace(/^\[PENDING\](\[by:.*?\])?\s*/i, '');
 
@@ -137,7 +141,24 @@ router.put('/:id/approve', verifyAuth, async (req, res) => {
         return res.status(404).json({ error: 'Material not found' });
     }
 
-    res.status(200).json({ message: 'Material approved successfully', data: data[0] });
+    // Award 10 points to the uploader if an email was found
+    if (uploaderEmail) {
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .select('id, points')
+        .eq('email', uploaderEmail)
+        .single();
+        
+      if (!userError && userData) {
+        const currentPoints = userData.points || 0;
+        await supabase
+          .from('users')
+          .update({ points: currentPoints + 10 })
+          .eq('id', userData.id);
+      }
+    }
+
+    res.status(200).json({ message: 'Material approved successfully. Uploader awarded 10 points.', data: data[0] });
   } catch (err) {
     console.error('Error approving material:', err);
     res.status(500).json({ error: 'Internal server error' });
