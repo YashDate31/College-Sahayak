@@ -355,4 +355,4 @@ This project is created and maintained by **Yash Date**.
 * **Academic Institute:** Government Polytechnic Awasari (Khurd)
 * **Industry Mentor:** Mr. Yuvraj Hande Sir (Somayu Infotech)
 
-*Dhanyawad! (Thanks for reading!)* 🎓
+*Dhanyawad! (Thank you for reading!)* 🎓
