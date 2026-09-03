@@ -250,6 +250,9 @@ erDiagram
         timestamp created_at
     }
 
+
+    ////
+
     users ||--o{ materials : "uploads (tagged by email)"
     users ||--o{ otps : "verifies via"
     users ||--o{ feedbacks : "submits"
