@@ -55,9 +55,9 @@ const trustFeatures = [
 ];
 
 const reviews = [
-  { name: 'Priya S.', branch: 'Computer Engineering', text: 'Amazing collection of notes. It helped me prepare faster for semester exams.', material: 'Java Programming Notes' },
-  { name: 'Rahul M.', branch: 'Mechanical Engineering', text: 'Lab manuals are detailed and easy to understand. Very helpful before practicals.', material: 'Thermodynamics Lab Manual' },
-  { name: 'Sneha K.', branch: 'Electronics Engineering', text: 'Great micro-project ideas. I found a topic and completed my report quickly.', material: 'IoT Project Collection' },
+  { name: 'Sham Dadge', branch: 'Computer Engineering', text: 'Amazing collection of notes. It helped me prepare faster for semester exams.', material: 'Java Programming Notes' },
+  { name: 'Ganesh Jadhav', branch: 'Mechanical Engineering', text: 'Lab manuals are detailed and easy to understand. Very helpful before practicals.', material: 'Thermodynamics Lab Manual' },
+  { name: 'Yash Date', branch: 'Electronics Engineering', text: 'Great micro-project ideas. I found a topic and completed my report quickly.', material: 'IoT Project Collection' },
 ];
 
 const importantLinks = [
